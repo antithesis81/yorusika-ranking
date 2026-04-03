@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>ヨルシカ全曲ランキング</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Klee+One:wght@400;600&family=Yuji+Syuku&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink:#2f6ea0; --ink-dark:#214f74; --paper:#f7f2e7; --paper-2:#f1eadc; --paper-3:#ece2cf;
+  --shadow-deep:rgba(53,39,19,.24);
+  --s:#3b6d95; --a:#5486aa; --b:#6a9ab9; --c:#8ab1ca; --d:#abc9da;
+}
+* { box-sizing:border-box; }
+html,body {
+  margin:0; padding:0; min-height:100%;
+  background:
+    radial-gradient(circle at 18% 14%, rgba(255,255,255,.55), transparent 24%),
+    radial-gradient(circle at 82% 20%, rgba(255,255,255,.25), transparent 20%),
+    linear-gradient(180deg, #dbcfb8 0%, #d2c4aa 100%);
+  color:var(--ink-dark);
+  font-family:"Klee One","Hiragino Mincho ProN","Yu Mincho",serif;
+}
+body { padding:22px; }
+.app { max-width:1260px; margin:0 auto; perspective:2000px; }
+.page {
+  min-height:86vh; position:relative; overflow:hidden; transform-origin:left center;
+  background:
+    radial-gradient(circle at 20% 12%, rgba(255,255,255,.5), transparent 24%),
+    radial-gradient(circle at 78% 18%, rgba(255,255,255,.22), transparent 18%),
+    linear-gradient(180deg, rgba(255,255,255,.08), rgba(0,0,0,.02)),
+    repeating-linear-gradient(180deg, rgba(80,110,135,.055) 0px, rgba(80,110,135,.055) 1px, transparent 1px, transparent 39px),
+    linear-gradient(180deg, var(--paper) 0%, var(--paper-2) 60%, var(--paper-3) 100%);
+  border-radius:18px 22px 20px 18px;
+  box-shadow:0 18px 42px var(--shadow-deep), inset 0 1px 0 rgba(255,255,255,.5), inset 28px 0 38px rgba(132,113,79,.11), inset -10px 0 22px rgba(109,89,57,.06), inset 0 -20px 35px rgba(111,93,62,.05);
+}
+.page::before {
+  content:""; position:absolute; inset:0; pointer-events:none;
+  background:
+    radial-gradient(circle at 17% 22%, rgba(150,118,77,.08), transparent 18%),
+    radial-gradient(circle at 72% 68%, rgba(95,80,48,.05), transparent 20%),
+    radial-gradient(circle at 60% 16%, rgba(255,255,255,.18), transparent 14%),
+    repeating-radial-gradient(circle at 0 0, rgba(74,58,29,.018) 0 1px, transparent 1px 7px);
+  mix-blend-mode:multiply;
+}
+.page::after {
+  content:""; position:absolute; left:0; top:0; bottom:0; width:58px; pointer-events:none;
+  background:linear-gradient(90deg, rgba(100,78,48,.14), rgba(100,78,48,.07) 20%, rgba(255,255,255,.06) 48%, transparent 100%);
+  box-shadow: inset -1px 0 0 rgba(107,85,53,.10);
+}
+.page.flip-in { animation: flipIn .9s cubic-bezier(.2,.8,.1,1) both; }
+.page.flip-in-home { animation: flipInHome 1.15s cubic-bezier(.15,.82,.08,1) both; }
+.page.flip-back { animation: flipBack .72s cubic-bezier(.35,.1,.2,1) both; }
+@keyframes flipIn {
+  0% { transform: rotateY(-18deg) translateX(26px) scale(.985); opacity:.25; filter:blur(1px); }
+  100% { transform: rotateY(0deg) translateX(0) scale(1); opacity:1; filter:none; }
+}
+@keyframes flipInHome {
+  0% { transform: rotateY(-56deg) translateX(120px) scale(.93); opacity:.05; filter:blur(2px); }
+  55% { transform: rotateY(12deg) translateX(-8px) scale(1.01); opacity:1; filter:none; }
+  100% { transform: rotateY(0deg) translateX(0) scale(1); opacity:1; }
+}
+@keyframes flipBack {
+  0% { transform: rotateY(0deg) translateX(0) scale(1); opacity:1; }
+  100% { transform: rotateY(16deg) translateX(24px) scale(.988); opacity:.18; }
+}
+
+.content { position:relative; z-index:2; padding:40px 48px 42px 80px; }
+.header { text-align:center; margin:8px 0 28px; }
+.title { font-family:"Klee One","Yu Mincho",serif; color:var(--ink); font-size:clamp(28px,4vw,44px); letter-spacing:.08em; font-weight:600; margin:0 0 8px; }
+.menu { display:flex; flex-direction:column; align-items:center; gap:22px; margin:28px auto 16px; max-width:520px; }
+.menu-button {
+  width:100%; appearance:none; background:none; border:none; color:var(--ink);
+  font:600 clamp(18px,2.1vw,24px)/1.5 "Klee One","Yu Mincho",serif; padding:8px 12px 20px;
+  position:relative; cursor:pointer; text-align:center;
+}
+.menu-button .label { position:relative; display:inline-block; }
+.menu-button .line {
+  position:absolute; left:50%; bottom:0; width:min(280px, calc(100% + 36px)); height:16px;
+  transform:translateX(-50%) scaleX(0); transform-origin:center; transition:transform .34s ease; pointer-events:none;
+}
+.menu-button:hover .line, .menu-button:focus-visible .line { transform:translateX(-50%) scaleX(1); }
+.menu-button .line path { fill:none; stroke:rgba(47,110,160,.68); stroke-width:2.5; stroke-linecap:round; }
+
+.top-actions,.bottom-actions { display:flex; gap:12px; flex-wrap:wrap; align-items:center; }
+.small-btn,.ghost-btn,.rank-btn,.mini {
+  appearance:none; border:none; cursor:pointer; border-radius:14px; font-family:"Klee One","Yu Mincho",serif;
+}
+.small-btn,.ghost-btn,.mini { padding:11px 18px; font-size:14px; font-weight:600; }
+.small-btn { background:rgba(47,110,160,.12); color:var(--ink-dark); box-shadow:0 2px 8px rgba(47,110,160,.08), inset 0 1px 0 rgba(255,255,255,.45); }
+.ghost-btn { background:rgba(255,255,255,.34); color:var(--ink-dark); border:1px solid rgba(47,110,160,.18); }
+.small-btn:disabled { opacity:.42; cursor:default; }
+.info { font-size:14px; color:rgba(33,79,116,.84); }
+.section-title { font-size:18px; color:var(--ink); margin:0 0 12px; letter-spacing:.06em; }
+.note-box { background:rgba(255,255,255,.24); border:1px solid rgba(84,112,137,.16); border-radius:18px; padding:18px 20px; box-shadow: inset 0 1px 0 rgba(255,255,255,.35); }
+
+.song-title-wrap { text-align:center; padding:58px 20px 42px; margin:18px 0 16px; }
+.song-title { font-family:"Yuji Syuku","Klee One","Yu Mincho",serif; color:var(--ink); font-size:clamp(24px,3.4vw,36px); line-height:1.45; letter-spacing:.04em; }
+.progress-line { width:100%; height:12px; border-radius:999px; background:rgba(47,110,160,.08); overflow:hidden; }
+.progress-fill { height:100%; background:linear-gradient(90deg, rgba(47,110,160,.7), rgba(47,110,160,.35)); }
+.rank-row { display:grid; grid-template-columns:repeat(5, minmax(0,1fr)); gap:10px; margin-top:14px; }
+.rank-btn { color:#fff; font-size:18px; padding:15px 0; box-shadow:0 8px 20px rgba(39,71,98,.16), inset 0 1px 0 rgba(255,255,255,.24); }
+.rank-btn.s { background:var(--s); } .rank-btn.a { background:var(--a); } .rank-btn.b { background:var(--b); } .rank-btn.c { background:var(--c); color:#18374f; } .rank-btn.d { background:var(--d); color:#153145; }
+
+.layout-two { display:grid; grid-template-columns:minmax(0,1fr) 340px; gap:26px; }
+.group-side { background:rgba(255,255,255,.22); border:1px solid rgba(84,112,137,.16); border-radius:18px; padding:18px 18px 18px 20px; max-height:70vh; overflow:auto; }
+.group-side ul { margin:10px 0 0 0; padding-left:0; list-style:none; }
+.group-side li { margin:6px 0; font-size:14px; padding:6px 8px; border-radius:10px; }
+.group-side li.current { background:rgba(47,110,160,.12); text-decoration:underline; text-underline-offset:4px; font-weight:600; }
+
+.card-list { display:flex; flex-direction:column; gap:6px; }
+.card-item {
+  display:grid; grid-template-columns:1fr auto; align-items:center; gap:10px;
+  padding:8px 11px; border-radius:14px; background:rgba(255,255,255,.24); border:1px solid rgba(84,112,137,.14);
+  transition:transform .14s ease, box-shadow .14s ease, outline-offset .14s ease, background-color .14s ease;
+}
+.card-item.compact { padding:5px 9px; }
+.card-item.dragging { opacity:.5; transform:rotate(-1deg) scale(1.012); box-shadow:0 18px 32px rgba(39,71,98,.20); }
+.card-item.drag-over-top { box-shadow:inset 0 5px 0 rgba(47,110,160,.8),0 12px 22px rgba(39,71,98,.12); background:rgba(47,110,160,.1); transform:translateY(2px); }
+.card-item.drag-over-bottom { box-shadow:inset 0 -5px 0 rgba(47,110,160,.8),0 12px 22px rgba(39,71,98,.12); background:rgba(47,110,160,.1); transform:translateY(-2px); }
+
+.top10-box { margin:8px 0 14px; background:rgba(255,255,255,.3); border:1px solid rgba(84,112,137,.16); border-radius:18px; padding:12px 14px 10px; }
+.top10-grid { display:grid; grid-template-columns:repeat(2, minmax(0,1fr)); gap:6px 14px; margin-top:8px; }
+.top10-item { font-size:13px; line-height:1.35; color:var(--ink-dark); }
+
+.item-title { font-size:13px; color:var(--ink-dark); line-height:1.3; }
+.item-sub { font-size:10.5px; color:rgba(33,79,116,.72); margin-top:1px; line-height:1.2; }
+.item-buttons { display:flex; gap:8px; }
+.mini { padding:7px 11px; background:rgba(47,110,160,.12); color:var(--ink-dark); }
+.columns { display:grid; grid-template-columns:1fr 1fr; gap:28px; }
+.about p,.about li { font-size:15px; line-height:1.9; }
+.about ul { margin:8px 0 18px 1.2em; }
+.footer-nav { margin-top:24px; }
+.page-no { position:absolute; right:26px; bottom:16px; font-size:12px; color:rgba(47,110,160,.55); letter-spacing:.18em; }
+.hidden { display:none !important; }
+.sticky-bar {
+  position:sticky; bottom:8px; z-index:3; margin-top:14px; padding-top:8px;
+  background:linear-gradient(180deg, rgba(247,242,231,0), rgba(247,242,231,.78) 28%, rgba(247,242,231,.92));
+}
+.summary-line { display:flex; gap:16px; flex-wrap:wrap; font-size:14px; color:rgba(33,79,116,.82); margin-top:8px; }
+@media (max-width:980px) { .layout-two { grid-template-columns:1fr; } .group-side { max-height:none; } }
+@media (max-width:720px) {
+  body { padding:8px; }
+  .content { padding:28px 18px 32px 48px; }
+  .rank-row { grid-template-columns:repeat(2,1fr); }
+  .columns,.top10-grid { grid-template-columns:1fr; }
+}
+@media print {
+  body { background:#fff; padding:0; }
+  .page { box-shadow:none; border-radius:0; }
+  .page::before,.page::after,.page-no,.top-actions,.bottom-actions,.sticky-bar { display:none !important; }
+}
+</style>
+</head>
+<body>
+<div class="app"><div id="app"></div></div>
+<script>
+(() => {
+"use strict";
+const SONGS = ["カトレア", "言って。", "あの夏に咲け", "靴の花火", "雲と幽霊", "負け犬にアンコールはいらない", "爆弾魔", "ヒッチコック", "準透明少年", "ただ君に晴れ", "冬眠", "藍二乗", "八月、某、月明かり", "詩書きとコーヒー", "踊ろうぜ", "六月は雨上がりの街を書く", "五月は花緑青の窓辺から", "夜紛い", "パレード", "エルマ", "だから僕は音楽を辞めた", "憂一乗", "夕凪、某、花惑い", "雨とカプチーノ", "神様のダンス", "雨晴るる", "歩く", "心に穴が空いた", "声", "エイミー", "ノーチラス", "昼鳶", "春ひさぎ", "レプリカント", "花人局", "盗作", "思想犯", "逃亡", "夜行", "花に亡霊", "爆弾魔（Re-Recording ver.）", "強盗と花束", "春泥棒", "風を食む", "嘘月", "夏の肖像", "都落ち", "ブレーメン", "チノカテ", "雪国", "月に吠える", "451", "パドドゥ", "又三郎", "老人と海", "さよならモルテン", "いさな", "左右盲", "アルジャーノン", "第一夜", "靴の花火（Re-Recording ver.）", "雲になる", "花も騒めく", "魔性", "プレイシック", "ポスト春", "太陽", "晴る", "忘れてください", "修羅", "火星人", "ルバート", "火葬", "アポリア", "へび", "うめき", "啄木鳥", "月光浴", "千鳥", "櫂", "ヒッチコック（Re-Recording ver.）", "テレパス", "茜", "斜陽"];
+const ALBUM_MAP = {"カトレア": "夏草が邪魔をする", "言って。": "夏草が邪魔をする", "あの夏に咲け": "夏草が邪魔をする", "靴の花火": "夏草が邪魔をする", "雲と幽霊": "夏草が邪魔をする", "負け犬にアンコールはいらない": "負け犬にアンコールはいらない", "爆弾魔": "負け犬にアンコールはいらない", "ヒッチコック": "負け犬にアンコールはいらない", "準透明少年": "負け犬にアンコールはいらない", "ただ君に晴れ": "負け犬にアンコールはいらない", "冬眠": "負け犬にアンコールはいらない", "藍二乗": "だから僕は音楽を辞めた", "八月、某、月明かり": "だから僕は音楽を辞めた", "詩書きとコーヒー": "だから僕は音楽を辞めた", "踊ろうぜ": "だから僕は音楽を辞めた", "六月は雨上がりの街を書く": "だから僕は音楽を辞めた", "五月は花緑青の窓辺から": "だから僕は音楽を辞めた", "夜紛い": "だから僕は音楽を辞めた", "パレード": "だから僕は音楽を辞めた", "エルマ": "だから僕は音楽を辞めた", "だから僕は音楽を辞めた": "だから僕は音楽を辞めた", "憂一乗": "エルマ", "夕凪、某、花惑い": "エルマ", "雨とカプチーノ": "エルマ", "神様のダンス": "エルマ", "雨晴るる": "エルマ", "歩く": "エルマ", "心に穴が空いた": "エルマ", "声": "エルマ", "エイミー": "エルマ", "ノーチラス": "エルマ", "昼鳶": "盗作", "春ひさぎ": "盗作", "レプリカント": "盗作", "花人局": "盗作", "盗作": "盗作", "思想犯": "盗作", "逃亡": "盗作", "夜行": "盗作", "花に亡霊": "盗作", "爆弾魔（Re-Recording ver.）": "盗作", "強盗と花束": "創作", "春泥棒": "創作", "風を食む": "創作", "嘘月": "創作", "夏の肖像": "幻燈", "都落ち": "幻燈", "ブレーメン": "幻燈", "チノカテ": "幻燈", "雪国": "幻燈", "月に吠える": "幻燈", "451": "幻燈", "パドドゥ": "幻燈", "又三郎": "幻燈", "老人と海": "幻燈", "さよならモルテン": "幻燈", "いさな": "幻燈", "左右盲": "幻燈", "アルジャーノン": "幻燈", "第一夜": "幻燈", "靴の花火（Re-Recording ver.）": "幻燈", "雲になる": "二人称", "花も騒めく": "二人称", "魔性": "二人称", "プレイシック": "二人称", "ポスト春": "二人称", "太陽": "二人称", "晴る": "二人称", "忘れてください": "二人称", "修羅": "二人称", "火星人": "二人称", "ルバート": "二人称", "火葬": "二人称", "アポリア": "二人称", "へび": "二人称", "うめき": "二人称", "啄木鳥": "二人称", "月光浴": "二人称", "千鳥": "二人称", "櫂": "二人称", "ヒッチコック（Re-Recording ver.）": "二人称", "テレパス": "シングルのみ", "茜": "シングルのみ", "斜陽": "シングルのみ"};
+const STORAGE_KEY = "yorushika_ranker_v10_state";
+const MAX_UNDO = 5;
+
+function initialState() {
+  return {
+    view:"home", transition:"none", startedAt:null,
+    classifyQueue:[{id:"root", labelPath:[], songs:[...SONGS], done:false}],
+    currentClassification:null, rankedGroups:[], rankingQueue:[], currentRanking:null,
+    boundaryPairs:[], currentBoundary:null, finalRanking:[], undoStack:[]
+  };
+}
+let state = load() || initialState();
+state.view = "home";
+
+function save() { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); }
+function load() { try { const raw = localStorage.getItem(STORAGE_KEY); return raw ? JSON.parse(raw) : null; } catch (e) { return null; } }
+function esc(s) {
+  return String(s)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;");
+}
+function compareLabelPath(a,b) {
+  const order = {S:0,A:1,B:2,C:3,D:4};
+  const len = Math.max(a.length,b.length);
+  for (let i=0;i<len;i++) {
+    if (a[i] == null) return -1;
+    if (b[i] == null) return 1;
+    if (order[a[i]] < order[b[i]]) return -1;
+    if (order[a[i]] > order[b[i]]) return 1;
+  }
+  return 0;
+}
+function groupLabel(path) { return path.length ? path.join(" > ") : "全曲"; }
+function pageClass() {
+  if (state.transition === "forward-home") return "page flip-in-home";
+  if (state.transition === "forward") return "page flip-in";
+  if (state.transition === "back") return "page flip-back";
+  return "page";
+}
+function nav(view, transition="forward") {
+  state.view = view;
+  state.transition = transition;
+  render();
+  if (transition !== "none") {
+    setTimeout(() => {
+      state.transition = "none";
+      render();
+    }, transition === "forward-home" ? 1160 : 760);
+  }
+}
+function startNew() {
+  state = initialState();
+  state.startedAt = new Date().toISOString();
+  beginNextClassificationGroup();
+  state.view = "classify";
+  state.transition = "forward-home";
+  save();
+  render();
+  setTimeout(() => { state.transition = "none"; render(); }, 1160);
+}
+function resume() {
+  const loaded = load();
+  if (loaded) state = loaded;
+  if (state.currentClassification) state.view = "classify";
+  else if (state.currentRanking) state.view = "rank";
+  else if (state.currentBoundary) state.view = "boundary";
+  else if (state.finalRanking && state.finalRanking.length) state.view = "result";
+  else state.view = "home";
+  state.transition = "forward-home";
+  save();
+  render();
+  setTimeout(() => { state.transition = "none"; render(); }, 1160);
+}
+function goHome() { nav("home","back"); }
+function snapshotClassification() {
+  const cc = state.currentClassification;
+  return {
+    index: cc.index,
+    buckets: { S:[...cc.buckets.S], A:[...cc.buckets.A], B:[...cc.buckets.B], C:[...cc.buckets.C], D:[...cc.buckets.D] },
+    history: [...cc.history]
+  };
+}
+function beginNextClassificationGroup() {
+  const next = state.classifyQueue.find(g => !g.done);
+  if (!next) return buildRankingQueue();
+  state.currentClassification = {
+    groupId: next.id,
+    labelPath: [...next.labelPath],
+    songs: [...next.songs],
+    index: 0,
+    buckets: {S:[],A:[],B:[],C:[],D:[]},
+    history: []
+  };
+  state.undoStack = [];
+  state.view = "classify";
+}
+function classifyCurrentSong(rank) {
+  const cc = state.currentClassification;
+  if (!cc) return;
+  state.undoStack.push(snapshotClassification());
+  if (state.undoStack.length > MAX_UNDO) state.undoStack.shift();
+  const song = cc.songs[cc.index];
+  cc.buckets[rank].push(song);
+  cc.history.push({song, rank});
+  cc.index += 1;
+  if (cc.index >= cc.songs.length) finalizeCurrentClassification();
+  else { save(); render(); }
+}
+function undoClassification() {
+  const cc = state.currentClassification;
+  if (!cc || !state.undoStack.length) return;
+  const prev = state.undoStack.pop();
+  cc.index = prev.index;
+  cc.buckets = prev.buckets;
+  cc.history = prev.history;
+  save();
+  render();
+}
+function finalizeCurrentClassification() {
+  const cc = state.currentClassification;
+  const target = state.classifyQueue.find(g => g.id === cc.groupId);
+  if (target) target.done = true;
+  ["S","A","B","C","D"].forEach(key => {
+    const arr = cc.buckets[key];
+    if (!arr.length) return;
+    if (arr.length <= 15) {
+      state.rankedGroups.push({ id:cc.groupId+"_"+key, labelPath:[...cc.labelPath,key], songs:[...arr], ranked:false, finalOrder:[] });
+    } else {
+      state.classifyQueue.push({ id:cc.groupId+"_"+key, labelPath:[...cc.labelPath,key], songs:[...arr], done:false });
+    }
+  });
+  state.currentClassification = null;
+  state.undoStack = [];
+  beginNextClassificationGroup();
+  save();
+  render();
+}
+function buildRankingQueue() {
+  state.rankingQueue = state.rankedGroups.filter(g => !g.ranked).sort((a,b)=>compareLabelPath(a.labelPath,b.labelPath));
+  if (!state.rankingQueue.length) return buildBoundaryQueue();
+  const g = state.rankingQueue[0];
+  state.currentRanking = { groupId:g.id, labelPath:[...g.labelPath], songs:[...g.songs] };
+  state.view = "rank";
+}
+function moveItem(arr, from, to) {
+  if (to < 0 || to > arr.length || from === to) return;
+  const item = arr.splice(from,1)[0];
+  arr.splice(to,0,item);
+}
+function confirmRanking() {
+  const cr = state.currentRanking;
+  const group = state.rankedGroups.find(g => g.id === cr.groupId);
+  group.ranked = true;
+  group.finalOrder = [...cr.songs];
+  state.currentRanking = null;
+  buildRankingQueue();
+  save();
+  render();
+}
+function buildBoundaryQueue() {
+  const ordered = state.rankedGroups.slice().sort((a,b)=>compareLabelPath(a.labelPath,b.labelPath));
+  state.boundaryPairs = [];
+  for (let i=0;i<ordered.length-1;i++) state.boundaryPairs.push({ leftGroupId:ordered[i].id, rightGroupId:ordered[i+1].id, done:false });
+  beginNextBoundary();
+}
+function beginNextBoundary() {
+  const next = state.boundaryPairs.find(p => !p.done);
+  if (!next) return buildFinalRanking();
+  const left = state.rankedGroups.find(g => g.id === next.leftGroupId);
+  const right = state.rankedGroups.find(g => g.id === next.rightGroupId);
+  const leftSlice = left.finalOrder.slice(Math.max(0, left.finalOrder.length - 3));
+  const rightSlice = right.finalOrder.slice(0, Math.min(3, right.finalOrder.length));
+  state.currentBoundary = {
+    leftGroupId:left.id,
+    rightGroupId:right.id,
+    leftKeep:left.finalOrder.slice(0, left.finalOrder.length - leftSlice.length),
+    rightKeep:right.finalOrder.slice(rightSlice.length),
+    combined:[...leftSlice, ...rightSlice]
+  };
+  state.view = "boundary";
+}
+function confirmBoundary() {
+  const cb = state.currentBoundary;
+  const left = state.rankedGroups.find(g => g.id === cb.leftGroupId);
+  const right = state.rankedGroups.find(g => g.id === cb.rightGroupId);
+  const leftCount = Math.min(3, left.finalOrder.length);
+  left.finalOrder = [...cb.leftKeep, ...cb.combined.slice(0,leftCount)];
+  right.finalOrder = [...cb.combined.slice(leftCount), ...cb.rightKeep];
+  const pair = state.boundaryPairs.find(p => p.leftGroupId === cb.leftGroupId && p.rightGroupId === cb.rightGroupId);
+  if (pair) pair.done = true;
+  state.currentBoundary = null;
+  beginNextBoundary();
+  save();
+  render();
+}
+function skipBoundary() {
+  const cb = state.currentBoundary;
+  const pair = state.boundaryPairs.find(p => p.leftGroupId === cb.leftGroupId && p.rightGroupId === cb.rightGroupId);
+  if (pair) pair.done = true;
+  state.currentBoundary = null;
+  beginNextBoundary();
+  save();
+  render();
+}
+function skipAllBoundary() {
+  if (!state.currentBoundary) return;
+  const cb = state.currentBoundary;
+  const pair = state.boundaryPairs.find(p => p.leftGroupId === cb.leftGroupId && p.rightGroupId === cb.rightGroupId);
+  if (pair) pair.done = true;
+  state.boundaryPairs.forEach(p => p.done = true);
+  state.currentBoundary = null;
+  buildFinalRanking();
+  save();
+  render();
+}
+function buildFinalRanking() {
+  state.finalRanking = [];
+  state.rankedGroups.slice().sort((a,b)=>compareLabelPath(a.labelPath,b.labelPath)).forEach(g => {
+    g.finalOrder.forEach(song => state.finalRanking.push({song, album:ALBUM_MAP[song] || "不明"}));
+  });
+  state.view = "result";
+}
+function exportJson(filename, data) {
+  const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+function exportText(filename, text) {
+  const blob = new Blob([text], {type:"text/plain;charset=utf-8"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url; a.download = filename; a.click();
+  setTimeout(() => URL.revokeObjectURL(url), 500);
+}
+function saveStateFile() { exportJson("yorushika_ranker_state.json", state); }
+function importState(file) {
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = () => {
+    try {
+      state = JSON.parse(reader.result);
+      state.view = "home";
+      state.transition = "none";
+      save();
+      render();
+      alert("保存状態を読み込みました。");
+    } catch (e) {
+      alert("読み込みに失敗しました。");
+    }
+  };
+  reader.readAsText(file);
+}
+function exportRankingJson() {
+  exportJson("yorushika_ranking.json", {
+    title:"あなたのヨルシカランキング",
+    totalSongs:state.finalRanking.length,
+    ranking: state.finalRanking.map((x,i)=>({rank:i+1, song:x.song, album:x.album}))
+  });
+}
+function exportRankingTxt() {
+  exportText("yorushika_ranking.txt", ["あなたのヨルシカランキング","",...state.finalRanking.map((x,i)=>`${i+1}. ${x.song} [${x.album}]`)].join("\n"));
+}
+function albumRankingData() {
+  const total = state.finalRanking.length || 1;
+  const buckets = {};
+  state.finalRanking.forEach((x, idx) => {
+    const a = x.album || "不明";
+    if (!buckets[a]) buckets[a] = {album:a, tracks:0, sumScore:0, bestRank:999};
+    buckets[a].tracks += 1;
+    buckets[a].sumScore += (total - idx);
+    buckets[a].bestRank = Math.min(buckets[a].bestRank, idx+1);
+  });
+  return Object.values(buckets).map(x => ({...x, averageScore:x.sumScore/x.tracks})).sort((a,b)=>b.averageScore-a.averageScore || a.bestRank-b.bestRank || a.album.localeCompare(b.album,"ja"));
+}
+function printPage() { window.print(); }
+function top10() { return state.finalRanking.slice(0,10); }
+
+function renderHome() {
+  return `<div class="${pageClass()}"><div class="content"><div class="header"><h1 class="title">ヨルシカ全曲ランキング</h1></div><div class="menu">
+    <button class="menu-button" id="startBtn"><span class="label">新しく開始</span><svg class="line" viewBox="0 0 300 16" preserveAspectRatio="none"><path d="M12 10 C 58 5, 96 14, 144 9 S 226 6, 288 10"/></svg></button>
+    <button class="menu-button" id="resumeBtn"><span class="label">保存状態を再開</span><svg class="line" viewBox="0 0 300 16" preserveAspectRatio="none"><path d="M12 10 C 58 5, 96 14, 144 9 S 226 6, 288 10"/></svg></button>
+    <button class="menu-button" id="songsBtn"><span class="label">対象曲：ヨルシカ、インストを除く全84曲</span><svg class="line" viewBox="0 0 300 16" preserveAspectRatio="none"><path d="M12 10 C 58 5, 96 14, 144 9 S 226 6, 288 10"/></svg></button>
+    <button class="menu-button" id="aboutBtn"><span class="label">ヨルシカ全曲ランキングについて</span><svg class="line" viewBox="0 0 300 16" preserveAspectRatio="none"><path d="M12 10 C 58 5, 96 14, 144 9 S 226 6, 288 10"/></svg></button>
+  </div><div class="page-no">序</div></div></div>`;
+}
+function renderSongs() {
+  return `<div class="${pageClass()}"><div class="content"><div class="top-actions"><button class="ghost-btn back-home">戻る</button></div><div class="header"><h1 class="title">対象曲一覧</h1></div><div class="note-box"><div class="info">ヨルシカ、インストを除く全84曲</div><div class="card-list" style="margin-top:16px">${SONGS.map((song,i)=>`<div class="card-item compact"><div><div class="item-title">${i+1}. ${esc(song)}</div><div class="item-sub">${esc(ALBUM_MAP[song]||"不明")}</div></div></div>`).join("")}</div></div><div class="footer-nav bottom-actions"><button class="ghost-btn back-home">戻る</button></div><div class="page-no">一</div></div></div>`;
+}
+function renderAbout() {
+  return `<div class="${pageClass()}"><div class="content about"><div class="top-actions"><button class="ghost-btn back-home">戻る</button></div><div class="header"><h1 class="title">ヨルシカ全曲ランキングについて</h1></div><div class="columns"><div class="note-box"><h2 class="section-title">作り方</h2><p>このランキングは、いきなり全曲を一列に並べるのではなく、まず全曲を S / A / B / C / D の 5 段階に分類し、その後に各グループをさらに分類していく方式です。</p><ul><li>全曲を 5 段階に振り分ける</li><li>15曲を超えるグループは、同じやり方で再分類する</li><li>15曲以下になったグループは、一覧で並べ替えて順位を確定する</li><li>最後にグループ境界の近辺だけ最終チェックする</li></ul></div><div class="note-box"><h2 class="section-title">仕組み</h2><p>分類中は直近 5 回まで「戻る」で評価をやり直せます。全曲の初回分類が終わると、次は各グループの分類に移ります。グループ分類中は、右側にそのグループの曲一覧を表示します。</p><p>Re-Recording ver. の楽曲は無印版と別曲として扱います。最終結果では曲名とアルバム名を表示し、さらに上位10曲の要約と参考用のアルバムランキングも確認できます。</p></div></div><div class="footer-nav bottom-actions"><button class="ghost-btn back-home">戻る</button></div><div class="page-no">二</div></div></div>`;
+}
+function renderClassify() {
+  const cc = state.currentClassification;
+  const subgroup = cc.labelPath.length > 0;
+  const mainInner = `<div class="top-actions"><button class="small-btn" id="undoBtn" ${state.undoStack.length ? "" : "disabled"}>戻る</button><button class="small-btn" id="saveStateBtn">状態を書き出し</button><label class="small-btn" for="importFile">状態を読み込む</label><input class="hidden" type="file" id="importFile" accept=".json,application/json"></div><div class="header"><h1 class="title">分類中</h1></div><div class="note-box"><div class="info">現在のグループ：${esc(groupLabel(cc.labelPath))}</div><div class="info">進捗：${cc.index+1} / ${cc.songs.length}</div><div class="progress-line" style="margin-top:12px"><div class="progress-fill" style="width:${Math.round((cc.index/cc.songs.length)*100)}%"></div></div></div><div class="song-title-wrap"><div class="song-title">${esc(cc.songs[cc.index])}</div></div><div class="rank-row"><button class="rank-btn s" data-rank="S">S</button><button class="rank-btn a" data-rank="A">A</button><button class="rank-btn b" data-rank="B">B</button><button class="rank-btn c" data-rank="C">C</button><button class="rank-btn d" data-rank="D">D</button></div><div class="summary-line"><span>S ${cc.buckets.S.length}</span><span>A ${cc.buckets.A.length}</span><span>B ${cc.buckets.B.length}</span><span>C ${cc.buckets.C.length}</span><span>D ${cc.buckets.D.length}</span></div>`;
+  return `<div class="${pageClass()}"><div class="content"><div class="${subgroup ? "layout-two" : ""}"><div>${mainInner}</div>${subgroup ? `<aside class="group-side"><div class="section-title">このグループの曲一覧</div><div class="info">${esc(groupLabel(cc.labelPath))} / ${cc.songs.length}曲</div><ul>${cc.songs.map((song,i)=>`<li class="${i===cc.index?'current':''}">${esc(song)}</li>`).join("")}</ul></aside>` : ""}</div><div class="page-no">${subgroup ? "群" : "三"}</div></div></div>`;
+}
+function renderRank() {
+  const cr = state.currentRanking;
+  return `<div class="${pageClass()}"><div class="content"><div class="top-actions"><button class="small-btn" id="saveStateBtn">状態を書き出し</button><label class="small-btn" for="importFile">状態を読み込む</label><input class="hidden" type="file" id="importFile" accept=".json,application/json"></div><div class="header"><h1 class="title">小グループ順位づけ</h1></div><div class="note-box info">グループ：${esc(groupLabel(cr.labelPath))} / ドラッグで並び替えてください</div><div class="card-list" id="dragList" style="margin-top:16px">${cr.songs.map((song,i)=>`<div class="card-item drag-item" draggable="true" data-index="${i}"><div><div class="item-title">${i+1}. ${esc(song)}</div><div class="item-sub">${esc(ALBUM_MAP[song]||"不明")}</div></div><div class="item-sub">ドラッグ</div></div>`).join("")}</div><div class="sticky-bar"><div class="bottom-actions"><button class="small-btn" id="confirmRankBtn">この順で確定</button></div></div><div class="page-no">四</div></div></div>`;
+}
+function renderBoundary() {
+  const cb = state.currentBoundary;
+  return `<div class="${pageClass()}"><div class="content"><div class="header"><h1 class="title">最終チェック</h1><div class="info">下記曲の並びはこれでいいですか？</div></div><div class="card-list" style="margin-top:16px">${cb.combined.map((song,i)=>`<div class="card-item"><div><div class="item-title">${i+1}. ${esc(song)}</div><div class="item-sub">${esc(ALBUM_MAP[song]||"不明")}</div></div><div class="item-buttons"><button class="mini move-boundary" data-index="${i}" data-dir="-1">↑</button><button class="mini move-boundary" data-index="${i}" data-dir="1">↓</button></div></div>`).join("")}</div><div class="bottom-actions footer-nav"><button class="small-btn" id="confirmBoundaryBtn">この並びを反映</button><button class="ghost-btn" id="skipBoundaryBtn">変更せず次へ</button><button class="ghost-btn" id="skipAllBoundaryBtn">以降の最終チェックをスキップ</button></div><div class="page-no">五</div></div></div>`;
+}
+function renderResult() {
+  const top = top10();
+  return `<div class="${pageClass()}"><div class="content"><div class="header"><h1 class="title">あなたのヨルシカランキング</h1></div><div class="top-actions"><button class="small-btn" id="exportRankingJsonBtn">JSON書き出し</button><button class="small-btn" id="exportRankingTxtBtn">TXT書き出し</button><button class="small-btn" id="printBtn">PDF書き出し</button><button class="small-btn" id="albumRankingBtn">アルバムランキング（参考）</button><button class="ghost-btn back-home">ホームへ</button></div><div class="top10-box"><div class="section-title" style="margin-bottom:0">上位10曲</div><div class="top10-grid">${top.map((x,i)=>`<div class="top10-item">${i+1}. ${esc(x.song)} <span class="item-sub">(${esc(x.album)})</span></div>`).join("")}</div></div><div class="card-list" style="margin-top:10px">${state.finalRanking.map((x,i)=>`<div class="card-item compact"><div><div class="item-title">${i+1}. ${esc(x.song)}</div><div class="item-sub">${esc(x.album)}</div></div></div>`).join("")}</div><div class="page-no">終</div></div></div>`;
+}
+function renderAlbumRanking() {
+  const data = albumRankingData();
+  return `<div class="${pageClass()}"><div class="content"><div class="header"><h1 class="title">アルバムランキング（参考）</h1></div><div class="top-actions"><button class="small-btn" id="printBtn">PDF書き出し</button><button class="ghost-btn" id="backToResultBtn">戻る</button></div><div class="note-box info">楽曲順位を点数化し、各アルバムの平均点で算出しています。</div><div class="card-list" style="margin-top:12px">${data.map((x,i)=>`<div class="card-item compact"><div><div class="item-title">${i+1}. ${esc(x.album)}</div><div class="item-sub">収録対象 ${x.tracks}曲 / 平均スコア ${x.averageScore.toFixed(2)}</div></div></div>`).join("")}</div><div class="page-no">付</div></div></div>`;
+}
+function render() {
+  const app = document.getElementById("app");
+  let html = "";
+  if (state.view === "home") html = renderHome();
+  else if (state.view === "songs") html = renderSongs();
+  else if (state.view === "about") html = renderAbout();
+  else if (state.view === "classify") html = renderClassify();
+  else if (state.view === "rank") html = renderRank();
+  else if (state.view === "boundary") html = renderBoundary();
+  else if (state.view === "result") html = renderResult();
+  else if (state.view === "albumRanking") html = renderAlbumRanking();
+  app.innerHTML = html;
+  bind();
+}
+function clearDragIndicators(list) {
+  list.querySelectorAll(".drag-item").forEach(x => x.classList.remove("drag-over-top","drag-over-bottom"));
+}
+function bindDragList() {
+  const list = document.getElementById("dragList");
+  if (!list || !state.currentRanking) return;
+  let dragIndex = null;
+  list.querySelectorAll(".drag-item").forEach(item => {
+    item.addEventListener("dragstart", e => {
+      dragIndex = Number(item.dataset.index);
+      item.classList.add("dragging");
+      e.dataTransfer.effectAllowed = "move";
+      try { e.dataTransfer.setData("text/plain", String(dragIndex)); } catch (err) {}
+    });
+    item.addEventListener("dragend", () => {
+      item.classList.remove("dragging");
+      clearDragIndicators(list);
+    });
+    item.addEventListener("dragover", e => {
+      e.preventDefault();
+      const rect = item.getBoundingClientRect();
+      const before = (e.clientY - rect.top) < rect.height / 2;
+      item.classList.remove("drag-over-top","drag-over-bottom");
+      item.classList.add(before ? "drag-over-top" : "drag-over-bottom");
+    });
+    item.addEventListener("dragleave", () => {
+      item.classList.remove("drag-over-top","drag-over-bottom");
+    });
+    item.addEventListener("drop", e => {
+      e.preventDefault();
+      const targetIndex = Number(item.dataset.index);
+      const rect = item.getBoundingClientRect();
+      const before = (e.clientY - rect.top) < rect.height / 2;
+      clearDragIndicators(list);
+      if (dragIndex == null) return;
+      let insertIndex = before ? targetIndex : targetIndex + 1;
+      if (dragIndex < insertIndex) insertIndex -= 1;
+      moveItem(state.currentRanking.songs, dragIndex, insertIndex);
+      save();
+      render();
+    });
+  });
+}
+function bind() {
+  document.getElementById("startBtn")?.addEventListener("click", startNew);
+  document.getElementById("resumeBtn")?.addEventListener("click", resume);
+  document.getElementById("songsBtn")?.addEventListener("click", () => nav("songs","forward-home"));
+  document.getElementById("aboutBtn")?.addEventListener("click", () => nav("about","forward-home"));
+  document.querySelectorAll(".back-home").forEach(el => el.addEventListener("click", goHome));
+  document.querySelectorAll("[data-rank]").forEach(el => el.addEventListener("click", () => classifyCurrentSong(el.dataset.rank)));
+  document.getElementById("undoBtn")?.addEventListener("click", undoClassification);
+  document.getElementById("saveStateBtn")?.addEventListener("click", saveStateFile);
+  document.getElementById("importFile")?.addEventListener("change", e => importState(e.target.files[0]));
+  bindDragList();
+  document.getElementById("confirmRankBtn")?.addEventListener("click", confirmRanking);
+  document.querySelectorAll(".move-boundary").forEach(el => el.addEventListener("click", () => {
+    const i = Number(el.dataset.index), dir = Number(el.dataset.dir);
+    const arr = state.currentBoundary.combined;
+    if (i + dir < 0 || i + dir >= arr.length) return;
+    const tmp = arr[i]; arr[i] = arr[i+dir]; arr[i+dir] = tmp;
+    save(); render();
+  }));
+  document.getElementById("confirmBoundaryBtn")?.addEventListener("click", confirmBoundary);
+  document.getElementById("skipBoundaryBtn")?.addEventListener("click", skipBoundary);
+  document.getElementById("skipAllBoundaryBtn")?.addEventListener("click", skipAllBoundary);
+  document.getElementById("exportRankingJsonBtn")?.addEventListener("click", exportRankingJson);
+  document.getElementById("exportRankingTxtBtn")?.addEventListener("click", exportRankingTxt);
+  document.getElementById("printBtn")?.addEventListener("click", printPage);
+  document.getElementById("albumRankingBtn")?.addEventListener("click", () => nav("albumRanking","forward"));
+  document.getElementById("backToResultBtn")?.addEventListener("click", () => nav("result","back"));
+}
+save();
+render();
+})();
+</script>
+</body>
+</html>
